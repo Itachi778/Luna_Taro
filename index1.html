@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Гадалка Луна — Таро, предсказания, обряды на удачу. Запись по телефону и в Telegram.">
+    <meta name="theme-color" content="#0b0710">
+    <title>Гадалка Луна — Таро · Предсказания · Обряды</title>
+    <style>
+        :root {
+            --bg-deep: #0b0710;
+            --bg-mid: #1a1126;
+            --gold: #f3e9d2;
+            --gold-soft: #dacba0;
+            --violet: #c4b5d9;
+            --violet-deep: #a88fd0;
+            --glow-violet: rgba(150, 100, 230, 0.45);
+            --glow-gold: rgba(255, 230, 170, 0.55);
+            --card-bg: rgba(20, 12, 30, 0.72);
+            --border-soft: rgba(210, 170, 255, 0.28);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-deep);
+            background-image:
+                radial-gradient(circle at 18% 25%, rgba(180, 130, 255, 0.18) 0%, transparent 32%),
+                radial-gradient(circle at 82% 72%, rgba(100, 200, 255, 0.14) 0%, transparent 38%),
+                radial-gradient(circle at 50% 45%, var(--bg-mid) 0%, #0a070e 100%);
+            font-family: 'Segoe UI', 'Cormorant Garamond', 'Times New Roman', serif;
+            padding: 24px 16px;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Звёздное небо */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, #fff 50%, transparent 50%),
+                radial-gradient(1px 1px at 25% 45%, #fff 50%, transparent 50%),
+                radial-gradient(1.5px 1.5px at 40% 15%, #fff 50%, transparent 50%),
+                radial-gradient(1px 1px at 60% 80%, #fff 50%, transparent 50%),
+                radial-gradient(1.5px 1.5px at 75% 35%, #fff 50%, transparent 50%),
+                radial-gradient(1px 1px at 90% 60%, #fff 50%, transparent 50%),
+                radial-gradient(1px 1px at 15% 85%, #fff 50%, transparent 50%),
+                radial-gradient(1.5px 1.5px at 50% 95%, #fff 50%, transparent 50%),
+                radial-gradient(1px 1px at 85% 10%, #fff 50%, transparent 50%),
+                radial-gradient(1px 1px at 5% 55%, #fff 50%, transparent 50%),
+                radial-gradient(1.5px 1.5px at 95% 90%, #fff 50%, transparent 50%),
+                radial-gradient(1px 1px at 35% 70%, #fff 50%, transparent 50%),
+                radial-gradient(1.5px 1.5px at 70% 5%, #fff 50%, transparent 50%);
+            background-size: 220px 220px;
+            background-repeat: repeat;
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 0;
+            animation: twinkle 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.35; }
+            to { opacity: 0.55; }
+        }
+
+        /* Живые частицы-звёзды */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 8px 2px rgba(200, 170, 255, 0.8);
+            opacity: 0;
+            animation: rise linear infinite;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) scale(0.6); opacity: 0; }
+            10% { opacity: 0.9; }
+            90% { opacity: 0.9; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+        }
+
+        /* Сияние позади карточки */
+        .aura {
+            position: fixed;
+            width: 560px;
+            height: 560px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(160, 110, 255, 0.2) 0%, transparent 70%);
+            filter: blur(70px);
+            pointer-events: none;
+            z-index: 0;
+            animation: pulse 7s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.14); opacity: 1; }
+        }
+
+        /* Курсор-свечение */
+        .cursor-glow {
+            position: fixed;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(200, 160, 255, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+
+        /* Карточка */
+        .card {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 720px;
+            background: var(--card-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--border-soft);
+            border-radius: 44px;
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.75),
+                0 0 90px var(--glow-violet),
+                inset 0 1px 2px rgba(255, 255, 255, 0.06);
+            padding: 48px 38px 42px;
+            text-align: center;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            animation: float 7s ease-in-out infinite;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow:
+                0 44px 80px rgba(0, 0, 0, 0.85),
+                0 0 120px rgba(160, 110, 255, 0.35),
+                inset 0 1px 2px rgba(255, 255, 255, 0.09);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Луна */
+        .moon-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .moon-icon {
+            width: 128px;
+            height: 128px;
+            margin: 0 auto;
+            background: radial-gradient(circle at 35% 35%, #fdf5dd, #dacba0 55%, #b8a67a);
+            border-radius: 50%;
+            box-shadow:
+                0 0 40px var(--glow-gold),
+                0 0 100px rgba(200, 160, 255, 0.5),
+                inset -10px -10px 22px rgba(0, 0, 0, 0.32),
+                inset 8px 8px 20px rgba(255, 255, 240, 0.5);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: box-shadow 0.4s ease, transform 0.4s ease;
+            animation: moonFloat 5s ease-in-out infinite;
+            user-select: none;
+        }
+
+        @keyframes moonFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(2deg); }
+        }
+
+        .moon-icon:hover {
+            transform: scale(1.06) rotate(-3deg);
+            box-shadow:
+                0 0 70px rgba(255, 240, 200, 0.95),
+                0 0 140px rgba(200, 160, 255, 0.7),
+                inset -10px -10px 22px rgba(0, 0, 0, 0.32),
+                inset 8px 8px 20px rgba(255, 255, 240, 0.5);
+        }
+
+        .moon-icon.flash {
+            animation: flash 0.7s ease;
+        }
+
+        @keyframes flash {
+            0% { box-shadow: 0 0 40px var(--glow-gold), 0 0 100px rgba(200,160,255,0.5), inset -10px -10px 22px rgba(0,0,0,0.32), inset 8px 8px 20px rgba(255,255,240,0.5); }
+            40% { box-shadow: 0 0 90px rgba(255,245,200,1), 0 0 180px rgba(220,180,255,0.9), inset -10px -10px 22px rgba(0,0,0,0.3), inset 8px 8px 20px rgba(255,255,240,0.7); }
+            100% { box-shadow: 0 0 40px var(--glow-gold), 0 0 100px rgba(200,160,255,0.5), inset -10px -10px 22px rgba(0,0,0,0.32), inset 8px 8px 20px rgba(255,255,240,0.5); }
+        }
+
+        .moon-icon::before,
+        .moon-icon::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(120, 100, 70, 0.25);
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .moon-icon::before { width: 26px; height: 26px; top: 24%; left: 20%; }
+        .moon-icon::after  { width: 16px; height: 16px; bottom: 24%; right: 24%; background: rgba(120, 100, 70, 0.35); }
+
+        .star {
+            position: absolute;
+            color: #fff6d5;
+            opacity: 0.9;
+            text-shadow: 0 0 12px #f0e6b0;
+            pointer-events: none;
+        }
+
+        .star.s1 { top: -16px; left: -28px; font-size: 22px; animation: twinkleStar 3s ease-in-out infinite; }
+        .star.s2 { bottom: -12px; right: -22px; font-size: 16px; animation: twinkleStar 4s ease-in-out infinite 0.6s; }
+        .star.s3 { top: 4px; right: -32px; font-size: 14px; animation: twinkleStar 3.5s ease-in-out infinite 1.2s; }
+        .star.s4 { bottom: 8px; left: -30px; font-size: 12px; animation: twinkleStar 4.5s ease-in-out infinite 0.9s; }
+
+        @keyframes twinkleStar {
+            0%, 100% { opacity: 0.5; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.15); }
+        }
+
+        /* Подсказка под луной */
+        .moon-hint {
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #8b7ba8;
+            margin-bottom: 16px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        /* Заголовок с анимированным градиентом */
+        h1 {
+            font-size: clamp(2.6rem, 9vw, 4rem);
+            font-weight: 400;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+            text-transform: uppercase;
+            word-break: break-word;
+            line-height: 1.05;
+            background: linear-gradient(90deg, #f3e9d2, #c4b5d9, #ffe9b0, #f3e9d2);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            animation: gradientShift 6s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(210, 180, 255, 0.35);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Подзаголовок */
+        .subtitle {
+            font-size: 1.05rem;
+            letter-spacing: 4px;
+            color: var(--violet);
+            text-transform: uppercase;
+            font-weight: 300;
+            margin-bottom: 26px;
+            border-bottom: 1px solid rgba(200, 170, 240, 0.32);
+            padding: 0 20px 18px;
+            display: inline-block;
+        }
+
+        /* Бегущая строка-цитата */
+        .ticker {
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 -38px 28px;
+            padding: 10px 0;
+            border-top: 1px solid rgba(200, 170, 255, 0.12);
+            border-bottom: 1px solid rgba(200, 170, 255, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+        }
+
+        .ticker-track {
+            display: inline-block;
+            padding-left: 100%;
+            animation: ticker 28s linear infinite;
+            font-size: 0.92rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #a88fd0;
+            font-style: italic;
+        }
+
+        .ticker-track span { margin: 0 28px; }
+        .ticker-track .sep { color: #ffe9b0; font-style: normal; }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Карточки услуг */
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(200, 170, 255, 0.16);
+            border-radius: 20px;
+            padding: 16px 14px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(200, 160, 255, 0.18) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .service-card:hover::before { opacity: 1; }
+
+        .service-card:hover {
+            transform: translateY(-4px) rotateX(4deg) rotateY(-4deg);
+            border-color: rgba(255, 230, 170, 0.4);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 24px rgba(180, 140, 255, 0.25);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .service-card .emoji {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 0 8px rgba(255, 220, 150, 0.5));
+        }
+
+        .service-card .name {
+            font-size: 1rem;
+            color: #e5d7ff;
+            letter-spacing: 0.5px;
+            font-weight: 300;
+        }
+
+        /* Блок «Почему я» */
+        .why {
+            margin-bottom: 30px;
+            padding: 22px 20px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(200, 170, 255, 0.14);
+            border-radius: 26px;
+            text-align: left;
+        }
+
+        .why-title {
+            font-size: 0.82rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #a88fd0;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .why-list {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .why-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 1rem;
+            color: #ddd0f0;
+            line-height: 1.45;
+            font-weight: 300;
+        }
+
+        .why-list li .mark {
+            color: #ffe9b0;
+            flex-shrink: 0;
+            text-shadow: 0 0 10px rgba(255, 220, 150, 0.6);
+        }
+
+        /* Контакты */
+        .contacts {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 0;
+            background: rgba(255, 255, 255, 0.035);
+            border-radius: 32px;
+            padding: 26px 20px;
+            border: 1px solid rgba(200, 170, 255, 0.18);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            font-size: 1.2rem;
+            color: #e5d7ff;
+            transition: color 0.25s, transform 0.25s, text-shadow 0.25s;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            padding: 8px 0;
+            border-radius: 40px;
+        }
+
+        .contact-item:hover,
+        .contact-item:focus-visible {
+            color: #fff4d6;
+            transform: scale(1.03);
+            text-shadow: 0 0 16px rgba(255, 220, 150, 0.65);
+            outline: none;
+        }
+
+        .contact-item .icon {
+            font-size: 1.6rem;
+            filter: drop-shadow(0 0 8px rgba(200, 160, 255, 0.65));
+            width: 30px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* Кнопка с блеском */
+        .btn-call {
+            position: relative;
+            display: inline-block;
+            margin-top: 24px;
+            padding: 16px 48px;
+            background: transparent;
+            border: 1.5px solid rgba(210, 180, 255, 0.75);
+            border-radius: 50px;
+            color: #f0e2ff;
+            font-size: 1.05rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-weight: 300;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 0 22px rgba(160, 120, 255, 0.25);
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+
+        .btn-call::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transition: left 0.7s ease;
+        }
+
+        .btn-call:hover::after { left: 100%; }
+
+        .btn-call:hover,
+        .btn-call:focus-visible {
+            background: rgba(180, 140, 255, 0.16);
+            border-color: #ffe9b0;
+            color: #fff6e0;
+            box-shadow: 0 0 44px rgba(200, 160, 255, 0.55), 0 0 22px rgba(255, 220, 150, 0.35);
+            letter-spacing: 5px;
+            outline: none;
+        }
+
+        /* Футер */
+        .footer-note {
+            margin-top: 32px;
+            font-size: 0.78rem;
+            color: #8b7ba8;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.75;
+        }
+
+        .footer-note .sep { color: #ffe9b0; margin: 0 8px; }
+
+        /* Адаптив */
+        @media (max-width: 520px) {
+            body { padding: 16px 12px; }
+            .card { padding: 32px 18px 30px; border-radius: 32px; }
+            h1 { letter-spacing: 5px; }
+            .subtitle { font-size: 0.82rem; letter-spacing: 2px; padding-bottom: 12px; }
+            .moon-icon { width: 96px; height: 96px; }
+            .services-grid { grid-template-columns: 1fr; gap: 10px; }
+            .contact-item { font-size: 1.02rem; gap: 10px; }
+            .contact-item .icon { font-size: 1.35rem; width: 26px; }
+            .btn-call { padding: 14px 32px; font-size: 0.92rem; letter-spacing: 2px; }
+            .ticker { margin: 0 -18px 24px; }
+            .ticker-track { font-size: 0.8rem; letter-spacing: 2px; }
+            .cursor-glow { display: none; }
+        }
+
+        /* Уважение к настройкам пользователя */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition-duration: 0.01ms !important;
+            }
+            .particles { display: none; }
+            .cursor-glow { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles" aria-hidden="true"></div>
+    <div class="aura" aria-hidden="true"></div>
+    <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+    <main class="card">
+        <!-- Луна -->
+        <div class="moon-wrap">
+            <div class="moon-icon" id="moonIcon" role="button" tabindex="0" aria-label="Нажми на луну — получи предсказание">
+                <span class="star s1" aria-hidden="true">✦</span>
+                <span class="star s2" aria-hidden="true">✧</span>
+                <span class="star s3" aria-hidden="true">✦</span>
+                <span class="star s4" aria-hidden="true">✧</span>
+            </div>
+        </div>
+        <div class="moon-hint" id="moonHint">Нажми на луну — получи послание</div>
+
+        <!-- Имя -->
+        <h1>Луна</h1>
+        <div class="subtitle">Гадалка · Таролог · Ясновидящая</div>
+
+        <!-- Бегущая строка -->
+        <div class="ticker" aria-hidden="true">
+            <div class="ticker-track">
+                <span>Тайны прошлого</span><span class="sep">✦</span>
+                <span>Ясность настоящего</span><span class="sep">✦</span>
+                <span>Пути будущего</span><span class="sep">✦</span>
+                <span>Энергия удачи</span><span class="sep">✦</span>
+                <span>Тайны прошлого</span><span class="sep">✦</span>
+                <span>Ясность настоящего</span><span class="sep">✦</span>
+                <span>Пути будущего</span><span class="sep">✦</span>
+                <span>Энергия удачи</span><span class="sep">✦</span>
+            </div>
+        </div>
+
+        <!-- Услуги -->
+        <div class="services-grid">
+            <div class="service-card">
+                <span class="emoji" aria-hidden="true">🌙</span>
+                <span class="name">Расклад Таро</span>
+            </div>
+            <div class="service-card">
+                <span class="emoji" aria-hidden="true">🔮</span>
+                <span class="name">Предсказания</span>
+            </div>
+            <div class="service-card">
+                <span class="emoji" aria-hidden="true">✨</span>
+                <span class="name">Гадания на будущее</span>
+            </div>
+            <div class="service-card">
+                <span class="emoji" aria-hidden="true">🍀</span>
+                <span class="name">Обряды на удачу</span>
+            </div>
+        </div>
+
+        <!-- Почему я -->
+        <div class="why">
+            <div class="why-title">Почему ко мне приходят</div>
+            <ul class="why-list">
+                <li><span class="mark">✦</span><span>Индивидуальный подход — без шаблонов и общих фраз</span></li>
+                <li><span class="mark">✦</span><span>Полная конфиденциальность и бережное отношение</span></li>
+                <li><span class="mark">✦</span><span>Честные ответы — даже если они не самые простые</span></li>
+                <li><span class="mark">✦</span><span>Онлайн и очно — в удобном для вас формате</span></li>
+            </ul>
+        </div>
+
+        <!-- Контакты -->
+        <div class="contacts">
+            <a href="tel:+79182774210" class="contact-item">
+                <span class="icon" aria-hidden="true">📞</span>
+                <span>+7 (918) 277-42-10</span>
+            </a>
+            <a href="https://t.me/mmridjd" class="contact-item" target="_blank" rel="noopener noreferrer">
+                <span class="icon" aria-hidden="true">✈️</span>
+                <span>@mmridjd</span>
+            </a>
+        </div>
+
+        <!-- Кнопка -->
+        <a href="https://t.me/mmridjd" class="btn-call" target="_blank" rel="noopener noreferrer">
+            Записаться на приём
+        </a>
+
+        <div class="footer-note">
+            <span class="sep">✦</span> Тайны открываются избранным <span class="sep">✦</span>
+        </div>
+    </main>
+
+    <script>
+        // Частицы-звёзды
+        (function () {
+            const container = document.getElementById('particles');
+            const count = window.matchMedia('(max-width: 520px)').matches ? 18 : 34;
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.bottom = '-10px';
+                p.style.animationDuration = (8 + Math.random() * 10) + 's';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                p.style.width = p.style.height = (1.5 + Math.random() * 2.5) + 'px';
+                p.style.opacity = 0;
+                container.appendChild(p);
+            }
+        })();
+
+        // Курсор-свечение
+        (function () {
+            const glow = document.getElementById('cursorGlow');
+            if (!glow || window.matchMedia('(pointer: coarse)').matches) return;
+            let raf = null;
+            document.addEventListener('mousemove', function (e) {
+                if (raf) return;
+                raf = requestAnimationFrame(function () {
+                    glow.style.left = e.clientX + 'px';
+                    glow.style.top = e.clientY + 'px';
+                    glow.style.opacity = '1';
+                    raf = null;
+                });
+            });
+            document.addEventListener('mouseleave', function () {
+                glow.style.opacity = '0';
+            });
+        })();
+
+        // Интерактивная луна — послания
+        (function () {
+            const moon = document.getElementById('moonIcon');
+            const hint = document.getElementById('moonHint');
+            const messages = [
+                'Сегодня Вселенная на твоей стороне ✨',
+                'Ответ уже близко — прислушайся к себе 🌙',
+                'Не торопи события: всё идёт по плану 🔮',
+                'Твой путь освещён звёздами ✦',
+                'Скоро в дверь постучит удача 🍀',
+                'Доверься интуиции — она не ошибается 💫',
+                'То, что казалось потерей, станет даром 🌌',
+                'Время перемен — откройся новому 🌠'
+            ];
+            let lastIndex = -1;
+
+            function showMessage() {
+                let i;
+                do {
+                    i = Math.floor(Math.random() * messages.length);
+                } while (i === lastIndex && messages.length > 1);
+                lastIndex = i;
+
+                moon.classList.add('flash');
+                hint.style.opacity = '0';
+
+                setTimeout(function () {
+                    hint.textContent = messages[i];
+                    hint.style.opacity = '1';
+                    moon.classList.remove('flash');
+                }, 300);
+            }
+
+            moon.addEventListener('click', showMessage);
+            moon.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    showMessage();
+                }
+            });
+        })();
+
+        // Подсветка карточек услуг под курсором
+        (function () {
+            document.querySelectorAll('.service-card').forEach(function (card) {
+                card.addEventListener('mousemove', function (e) {
+                    const r = card.getBoundingClientRect();
+                    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+                    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
